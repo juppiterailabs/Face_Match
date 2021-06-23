@@ -1,6 +1,6 @@
 from facematch.face import match
 
-f = open(Path to your first image, 'rb')
+f = open('Path to your first image', 'rb')
 data1 = f.read()
 f.close()
 

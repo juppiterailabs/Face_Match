@@ -1,0 +1,3 @@
+REMOTE_ADDRS = ['127.0.0.1']
+ALLOWED_EXTENTIONS = ['png','jpg','jpeg']
+MAX_SIZE = 5242880

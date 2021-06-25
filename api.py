@@ -1,9 +1,10 @@
 from facematch.face import match
-import config
+import utils
 
 def match_images(img_one: bytes, img_two: bytes) :
+    mx = utils.read_config()["MAX_SIZE"]
     try:
-        if len(img_one) > config.MAX_SIZE or len(img_two) > config.MAX_SIZE:
+        if len(img_one) > mx or len(img_two) > mx:
             raise Exception
         result, distance, _ = match(img_one, img_two)
         return {'result':str(result), 'distance': distance}

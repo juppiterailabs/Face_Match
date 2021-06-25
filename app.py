@@ -1,11 +1,12 @@
 from flask import Flask, jsonify, make_response, request
 import hashlib
-import json
+from werkzeug.middleware.proxy_fix import ProxyFix
 import utils
 from api import match_images
 from datetime import datetime
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -18,7 +19,7 @@ def auth(token, ip):
 @app.route('/')
 def index():
     if not auth(request.form.get('token'), request.remote_addr):
-        return make_response('Request is not authorised', 403)
+        return make_response(f'Request is not authorised {request.remote_addr}', 403)
     
     return make_response('Server is healthy', 200)
 
@@ -41,6 +42,8 @@ def match():
 
 @app.route('/config', methods=['PUT','DELETE'])
 def update_config():
+    if not auth(request.form.get('token'), request.remote_addr):
+        return make_response('Request is not authorised', 403)
     data = utils.read_config()
     updated_data = request.get_json()
     for key in data:
@@ -78,4 +81,4 @@ def update_config():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run()

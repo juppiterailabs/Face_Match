@@ -66,6 +66,13 @@ def update_config():
                         data[key].remove(item)
                     except ValueError:
                         pass
+    if not data['REMOTE_ADDRS']:
+        data['REMOTE_ADDRS'] = ["127.0.0.1"]
+    if not data['ALLOWED_EXTENTIONS']:
+        data['ALLOWED_EXTENTIONS'] = ["jpeg", "jpg", "png"]
+    if not data['MAX_SIZE']:
+        data['MAX_SIZE'] = 5242880
+
     utils.save_config(data)
     return data
 

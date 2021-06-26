@@ -18,16 +18,16 @@ def auth(token, ip):
 
 @app.route('/')
 def index():
-    if not auth(request.form.get('token'), request.remote_addr):
-        return make_response(f'Request is not authorised {request.remote_addr}', 403)
+    # if not auth(request.form.get('token'), request.remote_addr):
+    #     return make_response(f'Request is not authorised {request.remote_addr}', 403)
     
     return make_response('Server is healthy', 200)
 
 
 @app.route('/match-face', methods=['POST'])
 def match():
-    if not auth(request.form.get('token'), request.remote_addr):
-        return make_response('Request is not authorised', 403)
+    # if not auth(request.form.get('token'), request.remote_addr):
+    #     return make_response('Request is not authorised', 403)
 
     img_one = request.files.get('img_one')
     img_two = request.files.get('img_two')
@@ -42,8 +42,8 @@ def match():
 
 @app.route('/config', methods=['PUT','DELETE'])
 def update_config():
-    if not auth(request.form.get('token'), request.remote_addr):
-        return make_response('Request is not authorised', 403)
+    # if not auth(request.form.get('token'), request.remote_addr):
+    #     return make_response('Request is not authorised', 403)
     data = utils.read_config()
     updated_data = request.get_json()
     for key in data:

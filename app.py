@@ -2,7 +2,8 @@ from flask import Flask, jsonify, make_response, request
 import hashlib
 from werkzeug.middleware.proxy_fix import ProxyFix
 import utils
-from api import match_images
+import api
+
 from datetime import datetime
 
 app = Flask(__name__)
@@ -25,20 +26,36 @@ def index():
 
 
 @app.route('/match-face', methods=['POST'])
-def match():
+def match_face():
     # if not auth(request.form.get('token'), request.remote_addr):
     #     return make_response('Request is not authorised', 403)
 
     img_one = request.files.get('img_one')
     img_two = request.files.get('img_two')
     if img_one and img_two and img_one.filename !='' and img_two.filename !='' and allowed_file(img_one.filename) and allowed_file(img_two.filename):
-        res = match_images(img_one.read(),img_two.read())
+        res = api.match_images(img_one.read(),img_two.read())
         if not res:
             return make_response('Unable to process, Please pick different images, Size should be less than 5MB or images should contain only one face', 400)
         return jsonify(res)
     else:
         return make_response('Bad request body', 400)   
 
+
+@app.route('/match-signature', methods=['POST'])
+def match_signature():
+    # if not auth(request.form.get('token'), request.remote_addr):
+    #     return make_response('Request is not authorised', 403)
+
+    img_one = request.files.get('img_one')
+    img_two = request.files.get('img_two')
+    
+    if img_one and img_two and img_one.filename !='' and img_two.filename !='' and allowed_file(img_one.filename) and allowed_file(img_two.filename):
+        res = api.match_signatures(img_one.read(),img_two.read())
+        if not res:
+            return make_response('Unable to process, Please pick different images, Size should be less than 5MB or images should contain only one face', 400)
+        return jsonify(res)
+    else:
+        return make_response('Bad request body', 400)   
 
 @app.route('/config', methods=['PUT','DELETE'])
 def update_config():

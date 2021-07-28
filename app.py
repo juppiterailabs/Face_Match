@@ -52,7 +52,7 @@ def match_signature():
     if img_one and img_two and img_one.filename !='' and img_two.filename !='' and allowed_file(img_one.filename) and allowed_file(img_two.filename):
         res = api.match_signatures(img_one.read(),img_two.read())
         if not res:
-            return make_response('Unable to process, Please pick different images, Size should be less than 5MB or images should contain only one face', 400)
+            return make_response('Unable to process, Please pick different images, Size should be less than 5MB or images should contain only one signature', 400)
         return jsonify(res)
     else:
         return make_response('Bad request body', 400)   

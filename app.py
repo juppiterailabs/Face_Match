@@ -6,8 +6,8 @@ import api
 
 from datetime import datetime
 
-app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1)
+server = Flask(__name__)
+server.wsgi_app = ProxyFix(server.wsgi_app, x_for=1, x_host=1)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -17,7 +17,7 @@ def auth(token, ip):
     current_date = datetime.utcnow().date()
     return hashlib.sha256(str(current_date).encode('utf-8')).hexdigest() == token and ip in utils.read_config()["REMOTE_ADDRS"]
 
-@app.route('/')
+@server.route('/')
 def index():
     # if not auth(request.form.get('token'), request.remote_addr):
     #     return make_response(f'Request is not authorised {request.remote_addr}', 403)
@@ -25,7 +25,7 @@ def index():
     return make_response('Server is healthy', 200)
 
 
-@app.route('/match-face', methods=['POST'])
+@server.route('/match-face', methods=['POST'])
 def match_face():
     # if not auth(request.form.get('token'), request.remote_addr):
     #     return make_response('Request is not authorised', 403)
@@ -41,7 +41,7 @@ def match_face():
         return make_response('Bad request body', 400)   
 
 
-@app.route('/match-signature', methods=['POST'])
+@server.route('/match-signature', methods=['POST'])
 def match_signature():
     # if not auth(request.form.get('token'), request.remote_addr):
     #     return make_response('Request is not authorised', 403)
@@ -57,7 +57,7 @@ def match_signature():
     else:
         return make_response('Bad request body', 400)   
 
-@app.route('/config', methods=['PUT','DELETE'])
+@server.route('/config', methods=['PUT','DELETE'])
 def update_config():
     # if not auth(request.form.get('token'), request.remote_addr):
     #     return make_response('Request is not authorised', 403)
@@ -95,7 +95,3 @@ def update_config():
 
     utils.save_config(data)
     return data
-
-
-if __name__ == "__main__":
-    app.run()
